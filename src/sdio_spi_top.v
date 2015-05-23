@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module spi_slave_top(
+module sdio_spi_top(
 		rst, clk, SCK, MOSI, MISO, SSEL
     );
 

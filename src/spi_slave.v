@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module SPI_slave(rst, clk, SCK, MOSI, MISO, SSEL, spi_data_i, spi_txcomp, spi_data_o, spi_rxdy/*, LED*/);
+module SPI_slave(rst, clk, SCK, MOSI, MISO, SSEL, spi_data_i, spi_txcomp, spi_data_o, spi_rxdy);
 input rst;
 input clk;
 
@@ -30,7 +30,6 @@ output spi_txcomp;
 output [7:0] spi_data_o;
 output spi_rxdy;
 
-//output LED;
 
 // sync SCK to the FPGA clock using a 3-bits shift register
 reg [2:0] SCKr;
