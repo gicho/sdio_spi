@@ -27,6 +27,8 @@ input clk;
 input SCK, SSEL, MOSI;
 output MISO;
 
+parameter true = 1'b0, false = 1'b1;
+
 wire [7:0] spi_data;
 wire spi_txcomp;
 wire spi_rxdy;
@@ -42,5 +44,19 @@ SPI_slave spi_slave_inst(.rst(rst),
 						.spi_data_o(spi_data), 
 						.spi_rxdy(spi_rxdy)
 						);
+
+wire [7:0] txdat;
+wire txen, rdrxd, txfull, txempty, rxfull, rxempty;
+reg rdfifo = false;
+fifo_mxn #(8, 6) rxfifo(
+		.rst(rst),
+		.clk(clk),
+		.ien(txen),
+		.oen(rdfifo),
+		.idat(dat_o),
+		.odat(txdat),
+		.full(txfull),
+		.empty(txempty)
+		);
 
 endmodule
