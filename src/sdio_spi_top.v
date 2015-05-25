@@ -29,7 +29,7 @@ output MISO;
 
 parameter true = 1'b0, false = 1'b1;
 
-wire [7:0] spi_data;
+wire [7:0] spi_data_o, spi_data_i;
 wire spi_txcomp;
 wire spi_rxdy;
 
@@ -39,21 +39,26 @@ SPI_slave spi_slave_inst(.rst(rst),
 						.MOSI(MOSI), 
 						.MISO(MISO), 
 						.SSEL(SSEL), 
-						.spi_data_i(spi_data), 
+						.spi_data_i(spi_data_i), 
 						.spi_txcomp(spi_txcomp), 
-						.spi_data_o(spi_data), 
+						.spi_data_o(spi_data_o), 
 						.spi_rxdy(spi_rxdy)
 						);
 
 wire [7:0] txdat;
-wire txen, rdrxd, txfull, txempty, rxfull, rxempty;
+wire txen, rdrxd, txfull, txempty;
 reg rdfifo = false;
+
+assign txen = spi_rxdy;
+
+assign spi_data_i = txdat;
+
 fifo_mxn #(8, 6) rxfifo(
 		.rst(rst),
 		.clk(clk),
 		.ien(txen),
 		.oen(rdfifo),
-		.idat(dat_o),
+		.idat(spi_data_o),
 		.odat(txdat),
 		.full(txfull),
 		.empty(txempty)
