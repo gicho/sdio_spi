@@ -41,6 +41,7 @@ module fifo_mxn(rst, clk, ien, oen,
 		if(rst == 1'b0) begin //reset
 			wraddr <= {aw{1'b0}};
 			rdaddr <= {aw{1'b0}};
+			odatq <= {dw{1'b0}};
 			end
 		else begin
 			if(negedge_ien && full == false) begin //push
