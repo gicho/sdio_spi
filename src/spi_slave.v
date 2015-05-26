@@ -54,7 +54,7 @@ always @(posedge clk)
 begin
 	if(~rst)
 		begin
-			SSELr <= 3'b0;
+			SSELr <= 3'b111;
 		end
 	else
 		begin
