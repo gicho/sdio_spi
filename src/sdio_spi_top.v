@@ -19,13 +19,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module sdio_spi_top(
-		rst, clk, SCK, MOSI, MISO, SSEL
+		rst, clk, SCK, MOSI, MISO, SSEL,
+		sd_clk, cmd_i, finsh
     );
 
 input rst;
 input clk;
 input SCK, SSEL, MOSI;
 output MISO;
+input sd_clk,
+input cmd_i,
+output finsh
 
 parameter true = 1'b0, false = 1'b1;
 
@@ -73,6 +77,10 @@ assign spi_data_i = spi_tx_data;
 wire [7:0] cmd_reg;
 assign cmd_reg = spi_data_o;
 reg [3:0] spi_state;
+reg [3:0] read_stat = 4'b0;
+reg rdfifo = false;
+wire [7:0] txdat;
+
 always @(posedge clk)
 begin
 	if(~rst)
@@ -81,6 +89,8 @@ begin
 			SDIO_CTRL_REG <= 8'h0;
 			SDIO_FIFO_REG <= 8'h0;
 			spi_tx_data <= 8'h0;
+			rdfifo <= false;
+			read_stat <= 4'b0;
 		end
 	else
 		begin
@@ -100,6 +110,9 @@ begin
 								end
 								8'h05:begin
 									spi_tx_data <= SDIO_FIFO_REG;
+								end
+								8'hcc:begin
+									spi_state <= 4'h3;
 								end
 								default:begin
 									spi_state <= 4'b0;
@@ -121,6 +134,33 @@ begin
 							spi_state <= 4'b0;
 						end
 				end
+				4'h3:begin
+					spi_state <= 4'b4;
+				end
+				4'h4:begin
+					case(read_stat)
+						0:begin
+							if(txempty == false && spi_txcomp_buf)
+								begin
+									read_stat <= 4'b1;
+									rdfifo <= true;
+								end
+						end
+						1:begin
+							read_stat <= 4'h2;
+							rdfifo <= false;
+						end
+						2:begin
+							read_stat <= 4'b0;
+							rdfifo <= false;
+							spi_tx_data <= txdat;
+						end
+						default:begin
+							read_stat <= 4'b0;
+							rdfifo <= false;
+						end
+					endcase
+				end
 				default:begin
 					spi_state <= 4'b0;
 				end
@@ -128,16 +168,44 @@ begin
 		end
 end
 
-/*
-wire [7:0] txdat;
-wire txen, rdrxd, txfull, txempty;
+wire [7:0]cmd_o;
+wire [31:0]arg_o;
+wire finsh_o;
+wire [7:0]dat_o;
+wire [7:0]status;
+wire txen, rdrxd, txfull, txempty, rxfull, rxempty;
+
+assign finsh = txfull;
+
+ctrl sdio_ctrl(
+		.rst(rst),
+		.clk(clk),
+		.txfull(txfull),
+		.txen(txen),
+		.dat_o(dat_o),
+		.cmd_dat_i(cmd_o),
+		.arg_i(arg_o),
+		.finsh_i(finsh_o)
+		);
+
+sdio_sample sdio_sam(
+		.rst(rst), 
+		.sd_clk(sd_clk), 
+		.cmd_i(cmd_i), 
+		.cmd_o(cmd_o), 
+		.arg_o(arg_o),
+		.finsh_o(finsh_o),
+		.status(status)
+		);
+
+
 wire [5:0] fifo_level;
-reg rdfifo = false;
+
 //wire rdfifo;
 
 //assign rdfifo = spi_txcomp;
 
-assign txen = spi_rxdy;
+//assign txen = spi_rxdy;
 
 //assign spi_data_i = txdat;
 
@@ -146,14 +214,14 @@ fifo_mxn #(8, 6) rxfifo(
 		.clk(clk),
 		.ien(txen),
 		.oen(rdfifo),
-		.idat(spi_data_o),
+		.idat(dat_o),
 		.odat(txdat),
 		.full(txfull),
 		.empty(txempty),
 		.fifo_level(fifo_level)
 		);
 		
-reg [3:0] read_stat = 4'b0;
+/*
 always @(posedge clk)
 	begin
 		if(~rst)
