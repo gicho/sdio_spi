@@ -1,6 +1,6 @@
 
 module fifo_mxn(rst, clk, ien, oen, 
-	idat, odat, full, empty);
+	idat, odat, full, empty, fifo_level);
 	
 	parameter dw = 8;
 	parameter aw = 4;
@@ -15,6 +15,7 @@ module fifo_mxn(rst, clk, ien, oen,
 	output [dw-1:0] odat;
 	output full;
 	output empty;
+	output [aw-1:0] fifo_level;
 	
 	reg [dw-1:0] mem [0:max_size-1];
 	reg [aw-1:0] wraddr = {aw{1'b0}};
@@ -22,6 +23,8 @@ module fifo_mxn(rst, clk, ien, oen,
 	wire [aw-1:0] datnum = wraddr - rdaddr;
 	assign empty = datnum == {aw{1'b0}} ? true : false;
 	assign full  = datnum == {aw{1'b1}} ? true : false;
+	reg [aw-1:0] fifo_level_r;
+	assign fifo_level = fifo_level_r;
 	reg [dw-1:0] odatq;
 	assign odat = odatq;
 	reg ienbuf = 1'b0, oenbuf = 1'b0;
@@ -35,6 +38,15 @@ module fifo_mxn(rst, clk, ien, oen,
 		else begin //buffer
 			ienbuf <= ien;
 			oenbuf <= oen;
+			end
+		end
+	
+	always @(posedge clk or negedge rst) begin
+		if(rst == 1'b0) begin
+			fifo_level_r <= {aw{1'b0}};
+			end
+		else begin
+			fifo_level_r <= datnum;
 			end
 		end
 	always @ (posedge clk or negedge rst) begin
