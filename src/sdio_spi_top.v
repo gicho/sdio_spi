@@ -71,7 +71,7 @@ begin
 		end
 end
 
-
+wire txen, rdrxd, txfull, txempty, rxfull, rxempty;
 reg [7:0] spi_tx_data;
 assign spi_data_i = spi_tx_data;
 wire [7:0] cmd_reg;
@@ -81,16 +81,21 @@ reg [3:0] read_stat = 4'b0;
 reg rdfifo = false;
 wire [7:0] txdat;
 
+reg [7:0] txcount;
+reg [7:0] cnt;
+
 always @(posedge clk)
 begin
 	if(~rst)
 		begin
 			spi_state <= 4'b0;
 			SDIO_CTRL_REG <= 8'h0;
-			SDIO_FIFO_REG <= 8'h0;
+			//SDIO_FIFO_REG <= 8'h0;
 			spi_tx_data <= 8'h0;
 			rdfifo <= false;
 			read_stat <= 4'b0;
+			txcount <= 8'b0;
+			cnt <= 8'b0;
 		end
 	else
 		begin
@@ -130,20 +135,43 @@ begin
 				4'h2:begin
 					if(negedge_spi_rxdy)
 						begin
-							SDIO_FIFO_REG <= cmd_reg;
+							//SDIO_FIFO_REG <= cmd_reg;
 							spi_state <= 4'b0;
 						end
 				end
 				4'h3:begin
-					spi_state <= 4'b4;
+					if(negedge_spi_rxdy)
+						begin
+							txcount <= cmd_reg;
+							cnt <= 8'b0;
+							spi_state <= 4'h4;
+							rdfifo <= false;
+						end
 				end
 				4'h4:begin
+					rdfifo <= true;
+					cnt <= cnt + 1;
+					spi_state <= 4'h5;
+				end
+				4'h5:begin
+					rdfifo <= false;
+					if(cnt >= txcount)
+						begin
+							spi_state <= 4'h0;
+						end
+					else
+						begin
+							spi_state <= 4'h6;
+						end
+				end
+				4'h6:begin
 					case(read_stat)
 						0:begin
-							if(txempty == false && spi_txcomp_buf)
+							if(txempty == false && negedge_spi_txcomp)
 								begin
 									read_stat <= 4'b1;
 									rdfifo <= true;
+									cnt <= cnt + 1;
 								end
 						end
 						1:begin
@@ -173,7 +201,8 @@ wire [31:0]arg_o;
 wire finsh_o;
 wire [7:0]dat_o;
 wire [7:0]status;
-wire txen, rdrxd, txfull, txempty, rxfull, rxempty;
+wire sd_en;
+assign sd_en <= SDIO_CTRL_REG[0];
 
 assign finsh = txfull;
 
@@ -190,6 +219,7 @@ ctrl sdio_ctrl(
 
 sdio_sample sdio_sam(
 		.rst(rst), 
+		.sd_en(sd_en),
 		.sd_clk(sd_clk), 
 		.cmd_i(cmd_i), 
 		.cmd_o(cmd_o), 
@@ -221,6 +251,19 @@ fifo_mxn #(8, 6) rxfifo(
 		.fifo_level(fifo_level)
 		);
 		
+
+always @(posedge clk)
+begin
+	if(~rst)
+		begin
+			SDIO_FIFO_REG <= 8'b0;
+		end
+	else
+		begin
+			SDIO_FIFO_REG[5:0] <= fifo_level[5:0];
+		end
+end
+
 /*
 always @(posedge clk)
 	begin

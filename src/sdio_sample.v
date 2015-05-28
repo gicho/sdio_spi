@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module sdio_sample(
 		rst, 
+		sd_en,
 		sd_clk, 
 		cmd_i, 
 		cmd_o, 
@@ -28,6 +29,7 @@ module sdio_sample(
 		status
 		);
 input rst;
+input sd_en;
 input sd_clk;
 input cmd_i;
 output reg [7:0]cmd_o;
@@ -59,7 +61,16 @@ parameter IDLE = 7'h01, FOUND_START = 7'h02, FOUND_CMD = 7'h04, WAIT_RESP = 7'h0
 `define resp_idx  (RESP_SIZE-1-counter) 
 
 always @(posedge sd_clk)
-	cmd_dat_reg <= cmd_i;
+begin
+	if(!rst or !sd_en)
+		begin
+			cmd_dat_reg <= 1'b1;
+		end
+	else
+		begin
+			cmd_dat_reg <= cmd_i;
+		end
+end
 
 always @(capstate or cmd_dat_reg or counter or with_response or resp_len)
 begin
@@ -113,7 +124,7 @@ end
 
 always @(posedge sd_clk or negedge rst)
 begin
-	if (!rst)
+	if (!rst || !sd_en)
 		capstate <= IDLE;
 	else
 		capstate <= next_st;
@@ -121,7 +132,7 @@ end
 
 always @(posedge sd_clk or negedge rst)
 begin
-	if (!rst) begin
+	if (!rst || !sd_en) begin
 		cmd_o <= 0;
 		arg_o <= 0;
 		finsh_o <= 0;
