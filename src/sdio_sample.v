@@ -62,7 +62,7 @@ parameter IDLE = 7'h01, FOUND_START = 7'h02, FOUND_CMD = 7'h04, WAIT_RESP = 7'h0
 
 always @(posedge sd_clk)
 begin
-	if(!rst or !sd_en)
+	if(!rst || !sd_en)
 		begin
 			cmd_dat_reg <= 1'b1;
 		end

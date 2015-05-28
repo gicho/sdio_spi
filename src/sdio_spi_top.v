@@ -27,9 +27,9 @@ input rst;
 input clk;
 input SCK, SSEL, MOSI;
 output MISO;
-input sd_clk,
-input cmd_i,
-output finsh
+input sd_clk;
+input cmd_i;
+output finsh;
 
 parameter true = 1'b0, false = 1'b1;
 
@@ -182,6 +182,14 @@ begin
 							read_stat <= 4'b0;
 							rdfifo <= false;
 							spi_tx_data <= txdat;
+							if(cnt >= txcount)
+								begin
+									spi_state <= 4'h0;
+								end
+							else
+								begin
+									spi_state <= 4'h6;
+								end
 						end
 						default:begin
 							read_stat <= 4'b0;
@@ -202,7 +210,7 @@ wire finsh_o;
 wire [7:0]dat_o;
 wire [7:0]status;
 wire sd_en;
-assign sd_en <= SDIO_CTRL_REG[0];
+assign sd_en = SDIO_CTRL_REG[0];
 
 assign finsh = txfull;
 
