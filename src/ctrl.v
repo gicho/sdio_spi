@@ -85,7 +85,12 @@ module ctrl(
 						dat_buff[3] <= arg_i[23:16];
 						dat_buff[4] <= arg_i[15:8];
 						dat_buff[5] <= arg_i[7:0];
-						dat_buff[6] <= 8'hff;
+						/* dat_buff[1] <= 8'h0d;
+						dat_buff[2] <= 8'h1e;
+						dat_buff[3] <= 8'hda;
+						dat_buff[4] <= 8'h1f;
+						dat_buff[5] <= 8'h00;
+						dat_buff[6] <= 8'hff; */
 						buff_len <= 7;
 					/*end
 					else begin

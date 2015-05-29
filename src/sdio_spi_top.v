@@ -118,6 +118,8 @@ begin
 								end
 								8'hcc:begin
 									spi_state <= 4'h3;
+									cnt <= 8'b0;
+									rdfifo <= false;
 								end
 								default:begin
 									spi_state <= 4'b0;
@@ -143,17 +145,23 @@ begin
 					if(negedge_spi_rxdy)
 						begin
 							txcount <= cmd_reg;
-							cnt <= 8'b0;
-							spi_state <= 4'h4;
-							rdfifo <= false;
+							//cnt <= 8'b0;
+							spi_state <= 4'h5;
+							//rdfifo <= false;
+						end
+					if(negedge_spi_txcomp)
+						begin
+							rdfifo <= true;
+							cnt <= cnt + 1;
 						end
 				end
 				4'h4:begin
-					rdfifo <= true;
-					cnt <= cnt + 1;
+					//rdfifo <= true;
+					//cnt <= cnt + 1;
 					spi_state <= 4'h5;
 				end
 				4'h5:begin
+					spi_tx_data <= txdat;
 					rdfifo <= false;
 					if(cnt >= txcount)
 						begin
@@ -237,7 +245,7 @@ sdio_sample sdio_sam(
 		);
 
 
-wire [5:0] fifo_level;
+wire [6:0] fifo_level;
 
 //wire rdfifo;
 
@@ -247,7 +255,7 @@ wire [5:0] fifo_level;
 
 //assign spi_data_i = txdat;
 
-fifo_mxn #(8, 6) rxfifo(
+fifo_mxn #(8, 7) rxfifo(
 		.rst(rst),
 		.clk(clk),
 		.ien(txen),
@@ -268,7 +276,7 @@ begin
 		end
 	else
 		begin
-			SDIO_FIFO_REG[5:0] <= fifo_level[5:0];
+			SDIO_FIFO_REG[6:0] <= fifo_level[6:0];
 		end
 end
 

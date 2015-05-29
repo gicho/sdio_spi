@@ -172,13 +172,11 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1432783420" xil_pn:in_ck="198929674018036299" xil_pn:name="TRANEXT_xstsynthesize_spartan6" xil_pn:prop_ck="2140280874814026625" xil_pn:start_ts="1432783407">
+    <transform xil_pn:end_ts="1432889894" xil_pn:in_ck="198929674018036299" xil_pn:name="TRANEXT_xstsynthesize_spartan6" xil_pn:prop_ck="2140280874814026625" xil_pn:start_ts="1432889883">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="sdio_spi_top.lso"/>
@@ -197,21 +195,19 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1432783428" xil_pn:in_ck="-2077816352247333063" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="6621115481311800979" xil_pn:start_ts="1432783420">
+    <transform xil_pn:end_ts="1432889901" xil_pn:in_ck="-2077816352247333063" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="6621115481311800979" xil_pn:start_ts="1432889894">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <outfile xil_pn:name="_ngo"/>
       <outfile xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
       <outfile xil_pn:name="sdio_spi_top.bld"/>
       <outfile xil_pn:name="sdio_spi_top.ngd"/>
       <outfile xil_pn:name="sdio_spi_top_ngdbuild.xrpt"/>
     </transform>
-    <transform xil_pn:end_ts="1432783453" xil_pn:in_ck="-2077816352247333062" xil_pn:name="TRANEXT_map_spartan6" xil_pn:prop_ck="-3120850448234365343" xil_pn:start_ts="1432783428">
+    <transform xil_pn:end_ts="1432889920" xil_pn:in_ck="-2077816352247333062" xil_pn:name="TRANEXT_map_spartan6" xil_pn:prop_ck="-3120850448234365343" xil_pn:start_ts="1432889901">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="_xmsgs/map.xmsgs"/>
@@ -224,11 +220,10 @@
       <outfile xil_pn:name="sdio_spi_top_summary.xml"/>
       <outfile xil_pn:name="sdio_spi_top_usage.xml"/>
     </transform>
-    <transform xil_pn:end_ts="1432783477" xil_pn:in_ck="8473838772935629651" xil_pn:name="TRANEXT_par_spartan6" xil_pn:prop_ck="832869163894192598" xil_pn:start_ts="1432783453">
+    <transform xil_pn:end_ts="1432889944" xil_pn:in_ck="8473838772935629651" xil_pn:name="TRANEXT_par_spartan6" xil_pn:prop_ck="832869163894192598" xil_pn:start_ts="1432889920">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <outfile xil_pn:name="_xmsgs/par.xmsgs"/>
       <outfile xil_pn:name="sdio_spi_top.ncd"/>
       <outfile xil_pn:name="sdio_spi_top.pad"/>
@@ -240,11 +235,10 @@
       <outfile xil_pn:name="sdio_spi_top_pad.txt"/>
       <outfile xil_pn:name="sdio_spi_top_par.xrpt"/>
     </transform>
-    <transform xil_pn:end_ts="1432783506" xil_pn:in_ck="1457926439024625711" xil_pn:name="TRANEXT_bitFile_spartan6" xil_pn:prop_ck="5017394210571468131" xil_pn:start_ts="1432783477">
+    <transform xil_pn:end_ts="1432889975" xil_pn:in_ck="1457926439024625711" xil_pn:name="TRANEXT_bitFile_spartan6" xil_pn:prop_ck="5017394210571468131" xil_pn:start_ts="1432889944">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <outfile xil_pn:name="_xmsgs/bitgen.xmsgs"/>
       <outfile xil_pn:name="sdio_spi_top.bgn"/>
       <outfile xil_pn:name="sdio_spi_top.bit"/>
@@ -254,10 +248,9 @@
       <outfile xil_pn:name="webtalk.log"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>
     </transform>
-    <transform xil_pn:end_ts="1432783477" xil_pn:in_ck="-2077816352247333194" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416184" xil_pn:start_ts="1432783470">
+    <transform xil_pn:end_ts="1432889944" xil_pn:in_ck="-2077816352247333194" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416184" xil_pn:start_ts="1432889937">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <outfile xil_pn:name="_xmsgs/trce.xmsgs"/>
       <outfile xil_pn:name="sdio_spi_top.twr"/>
       <outfile xil_pn:name="sdio_spi_top.twx"/>
