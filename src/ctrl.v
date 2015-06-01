@@ -89,8 +89,8 @@ module ctrl(
 						dat_buff[2] <= 8'h1e;
 						dat_buff[3] <= 8'hda;
 						dat_buff[4] <= 8'h1f;
-						dat_buff[5] <= 8'h00;
-						dat_buff[6] <= 8'hff; */
+						dat_buff[5] <= 8'h00;*/
+						dat_buff[6] <= 8'hff;
 						buff_len <= 7;
 					/*end
 					else begin
